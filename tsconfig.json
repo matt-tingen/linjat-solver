@@ -3,14 +3,14 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "target": "esnext",
+    "target": "es2019",
     "strict": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "lib": ["ES2020"]
+    "lib": ["ES2019"],
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules/@types/node"]

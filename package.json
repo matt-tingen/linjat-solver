@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node --project tsconfig.json src/index.ts",
-    "types": "tsc --watch -p tsconfig.json"
+    "types": "tsc --noEmit --watch src/index.ts"
   },
   "dependencies": {
     "@matt-tingen/eslint-config": "^0.2.4",
