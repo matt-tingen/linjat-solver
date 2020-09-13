@@ -1,16 +1,10 @@
-import {
-  CONNECTING_CHARS,
-  DOT_CHAR,
-  SPACE_CHAR,
-  TERMINAL_CHARS,
-} from './constants';
+import { DOT_CHAR, markCharMap, SPACE_CHAR } from './constants';
 import { Cell, Puzzle } from './types';
-import { isTerminal, isDotted, isMarked, isMarker } from './util';
+import { isDotted, isMarked, isMarker } from './util';
 
 const stringifyCell = (cell: Cell): string => {
   if (isMarker(cell)) return cell.size.toString();
-  if (isTerminal(cell)) return TERMINAL_CHARS[cell.markedFrom];
-  if (isMarked(cell)) return CONNECTING_CHARS[cell.markedFrom];
+  if (isMarked(cell)) return markCharMap[cell.markedFrom];
   if (isDotted(cell)) return DOT_CHAR;
 
   return SPACE_CHAR;

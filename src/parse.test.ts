@@ -1,5 +1,5 @@
 import parse from './parse';
-import { Cell, DottedCell, MarkerCell, Puzzle } from './types';
+import { Cell, DottedCell, MarkableCell, MarkerCell, Puzzle } from './types';
 import { dotted, markable, marker } from './util';
 
 describe('parse', () => {
@@ -113,6 +113,43 @@ describe('parse', () => {
       expect(puzzle.getCell(0, 1)).toBe(d);
       expect(puzzle.getCell(1, 1)).toBe(e);
       expect(puzzle.getCell(2, 1)).toBe(f);
+    });
+  });
+
+  describe('marked cells', () => {
+    let a: Cell;
+    let b: Cell;
+    let c: Cell;
+    let d: Cell;
+
+    beforeAll(() => {
+      puzzle = parse(`
+      <2.2>
+      2...^
+      v...2
+      `);
+      [a, b, c, d] = puzzle.markers;
+      a = a.neighbors.left!;
+      b = b.neighbors.right!;
+      c = c.neighbors.down!;
+      d = d.neighbors.up!;
+    });
+
+    it('marks from right', () => {
+      expect(a).toMatchObject(markable());
+      expect((a as MarkableCell).markedFrom).toBe('right');
+    });
+    it('marks from left', () => {
+      expect(b).toMatchObject(markable());
+      expect((b as MarkableCell).markedFrom).toBe('left');
+    });
+    it('marks from up', () => {
+      expect(c).toMatchObject(markable());
+      expect((c as MarkableCell).markedFrom).toBe('up');
+    });
+    it('marks from down', () => {
+      expect(d).toMatchObject(markable());
+      expect((d as MarkableCell).markedFrom).toBe('down');
     });
   });
 });

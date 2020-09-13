@@ -1,4 +1,4 @@
-import { DOT_CHAR, SPACE_CHAR } from './constants';
+import { DOT_CHAR, markCharDirectionMap, SPACE_CHAR } from './constants';
 import { Cell, Puzzle } from './types';
 import { dotted, isDotted, isMarker, markable, marker } from './util';
 
@@ -9,6 +9,10 @@ const parseCell = (cellString: string): Cell => {
 
   if (cellString === SPACE_CHAR) {
     return markable();
+  }
+
+  if (cellString in markCharDirectionMap) {
+    return { ...markable(), markedFrom: markCharDirectionMap[cellString] };
   }
 
   const size = parseInt(cellString, 10);
