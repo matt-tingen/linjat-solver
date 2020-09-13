@@ -1,6 +1,6 @@
 import parse from './parse';
-import { dotted, markable, marker } from './testUtil';
 import { Cell, DottedCell, MarkerCell, Puzzle } from './types';
+import { dotted, markable, marker } from './util';
 
 describe('parse', () => {
   let puzzle: Puzzle;

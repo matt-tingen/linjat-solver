@@ -1,16 +1,14 @@
 import { DOT_CHAR, SPACE_CHAR } from './constants';
 import { Cell, Puzzle } from './types';
-import { isDotted, isMarker } from './util';
+import { dotted, isDotted, isMarker, markable, marker } from './util';
 
 const parseCell = (cellString: string): Cell => {
-  const neighbors = {};
-
   if (cellString === DOT_CHAR) {
-    return { type: 'markable', dotted: true, neighbors };
+    return dotted();
   }
 
   if (cellString === SPACE_CHAR) {
-    return { type: 'markable', neighbors };
+    return markable();
   }
 
   const size = parseInt(cellString, 10);
@@ -19,7 +17,7 @@ const parseCell = (cellString: string): Cell => {
     throw new Error(`Invalid cell: ${cellString}`);
   }
 
-  return { type: 'marker', size, neighbors };
+  return marker(size);
 };
 
 const parse = (string: string): Puzzle => {

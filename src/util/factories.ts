@@ -1,4 +1,4 @@
-import { DottedCell, MarkableCell, MarkerCell } from './types';
+import { DottedCell, MarkableCell, MarkerCell } from '../types';
 
 export const markable = (): MarkableCell => ({
   type: 'markable',
