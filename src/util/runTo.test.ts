@@ -44,4 +44,17 @@ describe('runTo', () => {
       start.neighbors.right?.neighbors.right?.neighbors.right,
     ]);
   });
+
+  it('limits cells by max count', () => {
+    const {
+      markers: [start],
+    } = parse('3.........');
+    const run = runTo(start, 'right', () => true, 3);
+
+    expect(run).toEqual([
+      start.neighbors.right,
+      start.neighbors.right?.neighbors.right,
+      start.neighbors.right?.neighbors.right?.neighbors.right,
+    ]);
+  });
 });

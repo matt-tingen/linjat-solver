@@ -5,8 +5,14 @@ interface RunTo {
     start: Cell,
     direction: Direction,
     predicate: CellPredicate<T>,
+    maxCount?: number,
   ): T[];
-  (start: Cell, direction: Direction, predicate?: CellPredicate): Cell[];
+  (
+    start: Cell,
+    direction: Direction,
+    predicate?: CellPredicate,
+    maxCount?: number,
+  ): Cell[];
 }
 
 /**
@@ -19,6 +25,7 @@ const runTo: RunTo = (
   start: Cell,
   direction: Direction,
   predicate: CellPredicate = () => true,
+  maxCount = Infinity,
 ) => {
   const run: Cell[] = [];
   let cell = start;
@@ -26,7 +33,7 @@ const runTo: RunTo = (
   do {
     const next = cell.neighbors[direction];
 
-    if (next && predicate(next)) {
+    if (next && run.length < maxCount && predicate(next)) {
       run.push(next);
       cell = next;
     } else {

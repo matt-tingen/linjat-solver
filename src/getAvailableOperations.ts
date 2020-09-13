@@ -87,13 +87,7 @@ const getAvailableOperations = (puzzle: Puzzle): Operation[] => {
     );
 
     const directionalOps = mapDirections((dir) => {
-      let count = 0;
-      const run = runTo(
-        marker,
-        dir,
-        (cell): cell is MarkableCell =>
-          isMarkable(cell) && ++count < minExtents[dir],
-      );
+      const run = runTo(marker, dir, isMarkable, minExtents[dir]);
 
       const opposite = flip(dir);
       const ops = run
