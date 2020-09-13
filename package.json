@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node --project tsconfig.json src/index.ts",
     "test": "jest",
-    "types": "tsc --noEmit --watch src/index.ts"
+    "types": "tsc --noEmit --watch"
   },
   "dependencies": {
     "@matt-tingen/eslint-config": "^0.2.4",
