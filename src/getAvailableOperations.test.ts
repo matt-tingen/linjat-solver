@@ -86,6 +86,16 @@ describe('getAvailableOperations', () => {
       expect(ops).toEqual([]);
     });
 
+    it('finds no dot pull op when corresponding marker is complete', () => {
+      const puzzle = parse('*<<4');
+
+      puzzle.dots[0].markedFrom = 'right';
+
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toEqual([]);
+    });
+
     // This would be helpful for having `solve` determine when a puzzle is invalid.
     it.skip('finds no extended dot pull op when there are invalid ambiguous dots', () => {
       const puzzle = parse('*2*');
@@ -232,6 +242,13 @@ describe('getAvailableOperations', () => {
       2.
       ..
       `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toEqual([]);
+    });
+
+    it('finds no expansion when marker is complete', () => {
+      const puzzle = parse('<<<4');
       const ops = getAvailableOperations(puzzle);
 
       expect(ops).toEqual([]);

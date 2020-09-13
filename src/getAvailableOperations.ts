@@ -60,7 +60,12 @@ const getAvailableOperations = (puzzle: Puzzle): Operation[] => {
 
     if (reachableMarkers.length === 1) {
       const [[, dir]] = reachableMarkers;
-      const markables = [dot, ...runTo(dot, dir, canBeMarked)];
+      const markables = runTo(dot, dir, canBeMarked);
+
+      if (canBeMarked(dot)) {
+        markables.unshift(dot);
+      }
+
       const ops = markables.map((cell) =>
         buildOperation(cell, dir, DOT_PULL_REASON),
       );
