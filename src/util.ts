@@ -1,9 +1,9 @@
 import {
   Cell,
   Direction,
-  MarkedCell,
   DottedCell,
   MarkableCell,
+  MarkedCell,
   MarkerCell,
 } from './types';
 
@@ -15,6 +15,8 @@ const opposites: Record<Direction, Direction> = {
 };
 
 export const opposite = (direction: Direction) => opposites[direction];
+
+export const directions = Object.keys(opposites) as Direction[];
 
 export const isTerminal = (cell: Cell): cell is MarkedCell => {
   if (isMarked(cell)) {
@@ -38,3 +40,11 @@ export const isMarked = (cell: Cell): cell is MarkedCell =>
 
 export const isMarker = (cell: Cell): cell is MarkerCell =>
   cell.type === 'marker';
+
+export const isCell = (cell: unknown): cell is Cell =>
+  Boolean(
+    typeof cell === 'object' &&
+      cell &&
+      typeof (cell as Cell).neighbors === 'object' &&
+      (isMarkable(cell as Cell) || isMarker(cell as Cell)),
+  );
