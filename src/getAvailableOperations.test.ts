@@ -253,6 +253,39 @@ describe('getAvailableOperations', () => {
 
       expect(ops).toEqual([]);
     });
+
+    it('finds no perpendicular expansion when marker is complete', () => {
+      const puzzle = parse(`
+      ...
+      <<3
+      ...
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toEqual([]);
+    });
+
+    it('finds expansion when orientation is disambiguated by perpendicular mark', () => {
+      const puzzle = parse(`
+      .3.
+      <<3
+      ...
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toIncludeSameMembers([
+        {
+          coordinates: { x: 0, y: 0 },
+          markFrom: 'right',
+          reasons: [EXPANSION_REASON],
+        },
+        {
+          coordinates: { x: 2, y: 0 },
+          markFrom: 'left',
+          reasons: [EXPANSION_REASON],
+        },
+      ]);
+    });
   });
 
   describe('multi-reason', () => {
