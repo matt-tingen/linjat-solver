@@ -39,3 +39,13 @@ export interface Puzzle {
   dots: DottedCell[];
   getCell(coordinates: Coordinates): Cell;
 }
+
+export type CellPredicate<T extends Cell | void = void> = T extends Cell
+  ? (cell: Cell) => cell is T
+  : (cell: Cell) => boolean;
+
+export interface Operation {
+  reasons: string[];
+  coordinates: Coordinates;
+  markFrom: Direction;
+}

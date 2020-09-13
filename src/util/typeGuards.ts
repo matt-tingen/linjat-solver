@@ -25,3 +25,6 @@ export const isCell = (cell: unknown): cell is Cell =>
       typeof (cell as Cell).neighbors === 'object' &&
       (isMarkable(cell as Cell) || isMarker(cell as Cell)),
   );
+
+export const canBeMarked = (cell: Cell): cell is MarkableCell =>
+  isMarkable(cell) && !cell.markedFrom;

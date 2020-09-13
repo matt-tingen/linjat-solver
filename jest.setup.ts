@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { partition } from 'lodash';
 import { Neighbors } from './src/types';
 import { directions, isCell } from './src/util';

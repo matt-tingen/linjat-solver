@@ -15,3 +15,5 @@ export const markCharDirectionMap = invert(markCharMap) as Record<
   string,
   Direction
 >;
+
+export const DOT_PULL_REASON = 'pulled by dot';
