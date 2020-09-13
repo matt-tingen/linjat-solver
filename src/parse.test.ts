@@ -23,14 +23,9 @@ describe('parse', () => {
     });
 
     it('retrieves the cell', () => {
-      expect(puzzle.getCell({ x: 0, y: 0 })).toEqual(markable());
-    });
-
-    it('retrieves the coordinates', () => {
       const coords = { x: 0, y: 0 };
-      const cell = puzzle.getCell(coords);
 
-      expect(puzzle.getCoords(cell)).toEqual(coords);
+      expect(puzzle.getCell(coords)).toEqual(markable(coords));
     });
   });
 
@@ -49,16 +44,16 @@ describe('parse', () => {
 
     it('has a dot', () => {
       expect(puzzle.dots).toHaveLength(1);
-      expect(a).toMatchObject(dotted());
+      expect(a).toMatchObject(dotted({ x: 0, y: 0 }));
     });
 
     it('has a marker', () => {
       expect(puzzle.markers).toHaveLength(1);
-      expect(c).toMatchObject(marker(3));
+      expect(c).toMatchObject(marker({ x: 2, y: 0 }, 3));
     });
 
     it('has a markable cell', () => {
-      expect(b).toMatchObject(markable());
+      expect(b).toMatchObject(markable({ x: 1, y: 0 }));
     });
 
     it('relates cells', () => {
@@ -71,18 +66,6 @@ describe('parse', () => {
       expect(puzzle.getCell({ x: 0, y: 0 })).toBe(a);
       expect(puzzle.getCell({ x: 1, y: 0 })).toBe(b);
       expect(puzzle.getCell({ x: 2, y: 0 })).toBe(c);
-    });
-
-    it('retrieves coordinates', () => {
-      const testCases: [Cell, Coordinates][] = [
-        [a, { x: 0, y: 0 }],
-        [b, { x: 1, y: 0 }],
-        [c, { x: 2, y: 0 }],
-      ];
-
-      testCases.forEach(([cell, coords]) => {
-        expect(puzzle.getCoords(cell)).toEqual(coords);
-      });
     });
   });
 
@@ -108,19 +91,19 @@ describe('parse', () => {
 
     it('has 2 dots', () => {
       expect(puzzle.dots).toHaveLength(2);
-      expect(a).toMatchObject(dotted());
-      expect(f).toMatchObject(dotted());
+      expect(a).toMatchObject(dotted({ x: 0, y: 0 }));
+      expect(f).toMatchObject(dotted({ x: 2, y: 1 }));
     });
 
     it('has 2 markers', () => {
       expect(puzzle.markers).toHaveLength(2);
-      expect(c).toMatchObject(marker(3));
-      expect(e).toMatchObject(marker(2));
+      expect(c).toMatchObject(marker({ x: 2, y: 0 }, 3));
+      expect(e).toMatchObject(marker({ x: 1, y: 1 }, 2));
     });
 
     it('has 2 markable cells', () => {
-      expect(b).toMatchObject(markable());
-      expect(d).toMatchObject(markable());
+      expect(b).toMatchObject(markable({ x: 1, y: 0 }));
+      expect(d).toMatchObject(markable({ x: 0, y: 1 }));
     });
 
     it('relates cells', () => {
@@ -139,21 +122,6 @@ describe('parse', () => {
       expect(puzzle.getCell({ x: 0, y: 1 })).toBe(d);
       expect(puzzle.getCell({ x: 1, y: 1 })).toBe(e);
       expect(puzzle.getCell({ x: 2, y: 1 })).toBe(f);
-    });
-
-    it('retrieves coordinates', () => {
-      const testCases: [Cell, Coordinates][] = [
-        [a, { x: 0, y: 0 }],
-        [b, { x: 1, y: 0 }],
-        [c, { x: 2, y: 0 }],
-        [d, { x: 0, y: 1 }],
-        [e, { x: 1, y: 1 }],
-        [f, { x: 2, y: 1 }],
-      ];
-
-      testCases.forEach(([cell, coords]) => {
-        expect(puzzle.getCoords(cell)).toEqual(coords);
-      });
     });
   });
 
@@ -177,19 +145,19 @@ describe('parse', () => {
     });
 
     it('marks from right', () => {
-      expect(a).toMatchObject(markable());
+      expect(a).toMatchObject(markable({ x: 0, y: 0 }));
       expect((a as MarkableCell).markedFrom).toBe('right');
     });
     it('marks from left', () => {
-      expect(b).toMatchObject(markable());
+      expect(b).toMatchObject(markable({ x: 4, y: 0 }));
       expect((b as MarkableCell).markedFrom).toBe('left');
     });
     it('marks from up', () => {
-      expect(c).toMatchObject(markable());
+      expect(c).toMatchObject(markable({ x: 0, y: 2 }));
       expect((c as MarkableCell).markedFrom).toBe('up');
     });
     it('marks from down', () => {
-      expect(d).toMatchObject(markable());
+      expect(d).toMatchObject(markable({ x: 4, y: 1 }));
       expect((d as MarkableCell).markedFrom).toBe('down');
     });
   });

@@ -2,17 +2,22 @@ import { DOT_CHAR, markCharDirectionMap, SPACE_CHAR } from './constants';
 import { Cell, Coordinates, Puzzle } from './types';
 import { dotted, isDotted, isMarker, markable, marker } from './util';
 
-const parseCell = (cellString: string): Cell => {
+const parseCell = (cellString: string, x: number, y: number): Cell => {
+  const coordinates: Coordinates = { x, y };
+
   if (cellString === DOT_CHAR) {
-    return dotted();
+    return dotted(coordinates);
   }
 
   if (cellString === SPACE_CHAR) {
-    return markable();
+    return markable(coordinates);
   }
 
   if (cellString in markCharDirectionMap) {
-    return { ...markable(), markedFrom: markCharDirectionMap[cellString] };
+    return {
+      ...markable(coordinates),
+      markedFrom: markCharDirectionMap[cellString],
+    };
   }
 
   const size = parseInt(cellString, 10);
@@ -21,12 +26,17 @@ const parseCell = (cellString: string): Cell => {
     throw new Error(`Invalid cell: ${cellString}`);
   }
 
-  return marker(size);
+  return marker(coordinates, size);
 };
 
 const parse = (string: string): Puzzle => {
   const lines = string.trim().split('\n');
-  const cells = lines.map((line) => line.trim().split('').map(parseCell));
+  const cells = lines.map((line, y) =>
+    line
+      .trim()
+      .split('')
+      .map((char, x) => parseCell(char, x, y)),
+  );
 
   const height = cells.length;
   const width = cells[0].length;
@@ -47,17 +57,7 @@ const parse = (string: string): Puzzle => {
 
   const allCoords = new Map<Cell, Coordinates>();
 
-  const getCoords = (cell: Cell) => {
-    const coords = allCoords.get(cell);
-
-    if (!coords) {
-      throw new Error('Cell is not in puzzle');
-    }
-
-    return coords;
-  };
-
-  const puzzle: Puzzle = { dots: [], markers: [], getCell, getCoords };
+  const puzzle: Puzzle = { dots: [], markers: [], getCell };
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {

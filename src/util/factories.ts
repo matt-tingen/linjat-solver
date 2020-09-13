@@ -1,17 +1,19 @@
-import { DottedCell, MarkableCell, MarkerCell } from '../types';
+import { Coordinates, DottedCell, MarkableCell, MarkerCell } from '../types';
 
-export const markable = (): MarkableCell => ({
+export const markable = (coordinates: Coordinates): MarkableCell => ({
   type: 'markable',
   neighbors: {},
+  coordinates,
 });
 
-export const dotted = (): DottedCell => ({
-  ...markable(),
+export const dotted = (coordinates: Coordinates): DottedCell => ({
+  ...markable(coordinates),
   dotted: true,
 });
 
-export const marker = (size: number): MarkerCell => ({
+export const marker = (coordinates: Coordinates, size: number): MarkerCell => ({
   type: 'marker',
   neighbors: {},
+  coordinates,
   size,
 });

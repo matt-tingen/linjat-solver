@@ -5,6 +5,7 @@ export type Neighbors = Partial<Record<Direction, Cell>>;
 export interface BaseCell {
   type: string;
   neighbors: Neighbors;
+  coordinates: Coordinates;
 }
 
 export interface MarkerCell extends BaseCell {
@@ -37,5 +38,4 @@ export interface Puzzle {
   markers: MarkerCell[];
   dots: DottedCell[];
   getCell(coordinates: Coordinates): Cell;
-  getCoords(cell: Cell): Coordinates;
 }
