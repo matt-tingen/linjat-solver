@@ -1,5 +1,12 @@
 import parse from './parse';
-import { Cell, DottedCell, MarkableCell, MarkerCell, Puzzle } from './types';
+import {
+  Cell,
+  DottedCell,
+  MarkableCell,
+  MarkerCell,
+  Puzzle,
+  Coordinates,
+} from './types';
 import { dotted, markable, marker } from './util';
 
 describe('parse', () => {
@@ -16,7 +23,14 @@ describe('parse', () => {
     });
 
     it('retrieves the cell', () => {
-      expect(puzzle.getCell(0, 0)).toEqual(markable());
+      expect(puzzle.getCell({ x: 0, y: 0 })).toEqual(markable());
+    });
+
+    it('retrieves the coordinates', () => {
+      const coords = { x: 0, y: 0 };
+      const cell = puzzle.getCell(coords);
+
+      expect(puzzle.getCoords(cell)).toEqual(coords);
     });
   });
 
@@ -54,9 +68,21 @@ describe('parse', () => {
     });
 
     it('retrieves cells', () => {
-      expect(puzzle.getCell(0, 0)).toBe(a);
-      expect(puzzle.getCell(1, 0)).toBe(b);
-      expect(puzzle.getCell(2, 0)).toBe(c);
+      expect(puzzle.getCell({ x: 0, y: 0 })).toBe(a);
+      expect(puzzle.getCell({ x: 1, y: 0 })).toBe(b);
+      expect(puzzle.getCell({ x: 2, y: 0 })).toBe(c);
+    });
+
+    it('retrieves coordinates', () => {
+      const testCases: [Cell, Coordinates][] = [
+        [a, { x: 0, y: 0 }],
+        [b, { x: 1, y: 0 }],
+        [c, { x: 2, y: 0 }],
+      ];
+
+      testCases.forEach(([cell, coords]) => {
+        expect(puzzle.getCoords(cell)).toEqual(coords);
+      });
     });
   });
 
@@ -107,12 +133,27 @@ describe('parse', () => {
     });
 
     it('retrieves cells', () => {
-      expect(puzzle.getCell(0, 0)).toBe(a);
-      expect(puzzle.getCell(1, 0)).toBe(b);
-      expect(puzzle.getCell(2, 0)).toBe(c);
-      expect(puzzle.getCell(0, 1)).toBe(d);
-      expect(puzzle.getCell(1, 1)).toBe(e);
-      expect(puzzle.getCell(2, 1)).toBe(f);
+      expect(puzzle.getCell({ x: 0, y: 0 })).toBe(a);
+      expect(puzzle.getCell({ x: 1, y: 0 })).toBe(b);
+      expect(puzzle.getCell({ x: 2, y: 0 })).toBe(c);
+      expect(puzzle.getCell({ x: 0, y: 1 })).toBe(d);
+      expect(puzzle.getCell({ x: 1, y: 1 })).toBe(e);
+      expect(puzzle.getCell({ x: 2, y: 1 })).toBe(f);
+    });
+
+    it('retrieves coordinates', () => {
+      const testCases: [Cell, Coordinates][] = [
+        [a, { x: 0, y: 0 }],
+        [b, { x: 1, y: 0 }],
+        [c, { x: 2, y: 0 }],
+        [d, { x: 0, y: 1 }],
+        [e, { x: 1, y: 1 }],
+        [f, { x: 2, y: 1 }],
+      ];
+
+      testCases.forEach(([cell, coords]) => {
+        expect(puzzle.getCoords(cell)).toEqual(coords);
+      });
     });
   });
 

@@ -28,8 +28,15 @@ export interface DottedCell extends MarkableCell {
 
 export type Cell = MarkerCell | MarkableCell;
 
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
 export interface Puzzle {
   markers: MarkerCell[];
   dots: DottedCell[];
-  getCell(x: number, y: number): Cell;
+  getCell(coordinates: Coordinates): Cell;
+  getCoords(cell: Cell): Coordinates;
+}
 }

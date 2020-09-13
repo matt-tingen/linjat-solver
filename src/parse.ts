@@ -1,5 +1,5 @@
 import { DOT_CHAR, markCharDirectionMap, SPACE_CHAR } from './constants';
-import { Cell, Puzzle } from './types';
+import { Cell, Puzzle, Coordinates } from './types';
 import { dotted, isDotted, isMarker, markable, marker } from './util';
 
 const parseCell = (cellString: string): Cell => {
@@ -35,7 +35,7 @@ const parse = (string: string): Puzzle => {
     throw new Error('Inconsistent row length');
   }
 
-  const getCell = (x: number, y: number) => {
+  const getCell = ({ x, y }: Coordinates) => {
     const cell = cells[y]?.[x];
 
     if (!cell) {
@@ -45,11 +45,25 @@ const parse = (string: string): Puzzle => {
     return cell;
   };
 
-  const puzzle: Puzzle = { dots: [], markers: [], getCell };
+  const allCoords = new Map<Cell, Coordinates>();
+
+  const getCoords = (cell: Cell) => {
+    const coords = allCoords.get(cell);
+
+    if (!coords) {
+      throw new Error('Cell is not in puzzle');
+    }
+
+    return coords;
+  };
+
+  const puzzle: Puzzle = { dots: [], markers: [], getCell, getCoords };
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const cell = cells[y][x];
+
+      allCoords.set(cell, { x, y });
 
       if (isDotted(cell)) puzzle.dots.push(cell);
       if (isMarker(cell)) puzzle.markers.push(cell);
