@@ -7,6 +7,6 @@ const opposites: Record<Direction, Direction> = {
   left: 'right',
 };
 
-export const opposite = (direction: Direction) => opposites[direction];
+export const flip = (direction: Direction) => opposites[direction];
 
 export const directions = Object.keys(opposites) as Direction[];
