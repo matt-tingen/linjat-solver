@@ -39,4 +39,3 @@ export interface Puzzle {
   getCell(coordinates: Coordinates): Cell;
   getCoords(cell: Cell): Coordinates;
 }
-}
