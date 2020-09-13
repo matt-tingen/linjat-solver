@@ -1,4 +1,5 @@
 import { DOT_CHAR, markCharDirectionMap, SPACE_CHAR } from './constants';
+import trimPuzzleString from './trimPuzzleString';
 import { Cell, Coordinates, Puzzle } from './types';
 import { dotted, isDotted, isMarker, markable, marker } from './util';
 
@@ -30,12 +31,9 @@ const parseCell = (cellString: string, x: number, y: number): Cell => {
 };
 
 const parse = (string: string): Puzzle => {
-  const lines = string.trim().split('\n');
+  const lines = trimPuzzleString(string).split('\n');
   const cells = lines.map((line, y) =>
-    line
-      .trim()
-      .split('')
-      .map((char, x) => parseCell(char, x, y)),
+    line.split('').map((char, x) => parseCell(char, x, y)),
   );
 
   const height = cells.length;
