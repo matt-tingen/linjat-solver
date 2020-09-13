@@ -17,3 +17,4 @@ export const markCharDirectionMap = invert(markCharMap) as Record<
 >;
 
 export const DOT_PULL_REASON = 'pulled by dot';
+export const EXPANSION_REASON = 'expansion';

@@ -1,4 +1,5 @@
-import { DOT_PULL_REASON } from './constants';
+import { groupBy } from 'lodash';
+import { DOT_PULL_REASON, EXPANSION_REASON } from './constants';
 import {
   Direction,
   MarkableCell,
@@ -10,10 +11,15 @@ import {
   canBeMarked,
   canReach,
   directions,
+  flip,
+  horizontalDirections,
+  isMarkable,
   isMarker,
   nearest,
   runTo,
+  verticalDirections,
 } from './util';
+import mapDirections from './util/mapDirections';
 
 const buildOperation = (
   cell: MarkableCell,
@@ -24,6 +30,20 @@ const buildOperation = (
   coordinates: cell.coordinates,
   markFrom,
 });
+
+const coalesceOperations = (operations: Operation[]) => {
+  const groups = groupBy(
+    operations,
+    ({ coordinates: { x, y }, markFrom }) => `${x},${y};${markFrom}`,
+  );
+
+  return Object.values(groups).map(
+    (ops): Operation => ({
+      ...ops[0],
+      reasons: ops.flatMap((op) => op.reasons),
+    }),
+  );
+};
 
 const getAvailableOperations = (puzzle: Puzzle): Operation[] => {
   const operations: Operation[] = [];
@@ -49,7 +69,54 @@ const getAvailableOperations = (puzzle: Puzzle): Operation[] => {
     }
   });
 
-  return operations;
+  // expansion ops
+  puzzle.markers.forEach((marker) => {
+    const spaceAvailable = mapDirections(
+      (dir) =>
+        runTo(
+          marker,
+          dir,
+          (cell) =>
+            isMarkable(cell) &&
+            (!cell.markedFrom || cell.markedFrom === flip(dir)),
+          marker.size - 1,
+        ).length,
+    );
+    const minExtents = mapDirections(
+      (dir) => marker.size - spaceAvailable[flip(dir)] - 1,
+    );
+
+    const directionalOps = mapDirections((dir) => {
+      let count = 0;
+      const run = runTo(
+        marker,
+        dir,
+        (cell): cell is MarkableCell =>
+          isMarkable(cell) && ++count < minExtents[dir],
+      );
+
+      const opposite = flip(dir);
+      const ops = run
+        .filter(canBeMarked)
+        .map((cell) => buildOperation(cell, opposite, EXPANSION_REASON));
+
+      return ops;
+    });
+
+    const hasPerpendicularOps =
+      horizontalDirections.some((hDir) => directionalOps[hDir].length) &&
+      verticalDirections.some((vDir) => directionalOps[vDir].length);
+
+    if (hasPerpendicularOps) return;
+
+    const expansionOperations = Object.values(directionalOps).flat();
+
+    operations.push(...expansionOperations);
+  });
+
+  const coalesced = coalesceOperations(operations);
+
+  return coalesced;
 };
 
 export default getAvailableOperations;

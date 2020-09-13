@@ -17,7 +17,10 @@ const getMaxExtent = (marker: MarkerCell, direction: Direction): number => {
       isMarkable(cell) && (!cell.markedFrom || cell.markedFrom === opposite),
   );
   const availableSpace = run.length;
-  const maxExtent = Math.min(marker.size - 1, availableSpace - marks[opposite]);
+  const maxExtent = Math.max(
+    Math.min(marker.size - 1, availableSpace) - marks[opposite],
+    0,
+  );
 
   return maxExtent;
 };

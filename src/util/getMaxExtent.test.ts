@@ -49,4 +49,12 @@ describe('getMaxExtent', () => {
 
     expect(getMaxExtent(marker, 'right')).toBe(0);
   });
+
+  it('accounts for existing opposite marks', () => {
+    const {
+      markers: [marker],
+    } = parse('.......5>..');
+
+    expect(getMaxExtent(marker, 'left')).toBe(3);
+  });
 });
