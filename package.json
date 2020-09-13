@@ -8,7 +8,7 @@
     "types": "tsc --noEmit --watch"
   },
   "dependencies": {
-    "@matt-tingen/eslint-config": "^0.2.5-rc1",
+    "@matt-tingen/eslint-config": "^0.2.5",
     "@types/jest": "^26.0.13",
     "@types/lodash": "^4.14.161",
     "@types/node": "^14.10.1",

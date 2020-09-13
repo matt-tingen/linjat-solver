@@ -1,5 +1,5 @@
 import { DOT_CHAR, markCharDirectionMap, SPACE_CHAR } from './constants';
-import { Cell, Puzzle, Coordinates } from './types';
+import { Cell, Coordinates, Puzzle } from './types';
 import { dotted, isDotted, isMarker, markable, marker } from './util';
 
 const parseCell = (cellString: string): Cell => {

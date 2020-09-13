@@ -1,11 +1,11 @@
 import parse from './parse';
 import {
   Cell,
+  Coordinates,
   DottedCell,
   MarkableCell,
   MarkerCell,
   Puzzle,
-  Coordinates,
 } from './types';
 import { dotted, markable, marker } from './util';
 
