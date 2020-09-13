@@ -55,15 +55,11 @@ const parse = (string: string): Puzzle => {
     return cell;
   };
 
-  const allCoords = new Map<Cell, Coordinates>();
-
   const puzzle: Puzzle = { dots: [], markers: [], getCell };
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const cell = cells[y][x];
-
-      allCoords.set(cell, { x, y });
 
       if (isDotted(cell)) puzzle.dots.push(cell);
       if (isMarker(cell)) puzzle.markers.push(cell);
