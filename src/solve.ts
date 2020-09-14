@@ -4,6 +4,7 @@ import PuzzleError from './PuzzleError';
 import stringify from './stringify';
 import { Operation, Puzzle } from './types';
 import { isMarkable } from './util';
+import verify from './verify';
 
 // Using _.cloneDeep does not handle getCell.
 const clonePuzzle = (puzzle: Puzzle): Puzzle => parse(stringify(puzzle));
@@ -46,6 +47,10 @@ const solve = (
       stepListener?.(cloned, operations, i++);
     }
   } while (operations.length);
+
+  if (!verify(cloned)) {
+    throw new PuzzleError(cloned, 'Invalid puzzle');
+  }
 
   return cloned;
 };
