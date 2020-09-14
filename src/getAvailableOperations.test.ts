@@ -78,31 +78,6 @@ describe('getAvailableOperations', () => {
         },
       ]);
     });
-
-    it('finds no extended dot pull op when dot is accessible by multiple markers', () => {
-      const puzzle = parse('..3.*.3..');
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
-
-    it('finds no dot pull op when corresponding marker is complete', () => {
-      const puzzle = parse('*<<4');
-
-      puzzle.dots[0].markedFrom = 'right';
-
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
-
-    // This would be helpful for having `solve` determine when a puzzle is invalid.
-    it.skip('finds no extended dot pull op when there are invalid ambiguous dots', () => {
-      const puzzle = parse('*2*');
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
   });
 
   describe('expansion ops', () => {
@@ -204,13 +179,6 @@ describe('getAvailableOperations', () => {
       ]);
     });
 
-    it('finds no expansion op when unconstrained', () => {
-      const puzzle = parse('..3..');
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
-
     it('finds a complete unidirection expansion op which is reachable by another marker', () => {
       const puzzle = parse('.2.2');
       const ops = getAvailableOperations(puzzle);
@@ -237,37 +205,6 @@ describe('getAvailableOperations', () => {
       ]);
     });
 
-    it('finds no expansion op when marker can expand in either orientation', () => {
-      const puzzle = parse(`
-      2.
-      ..
-      `);
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
-
-    it('finds no expansion op when marker can expand in any direction', () => {
-      const puzzle = parse(`
-      ...
-      .2.
-      ...
-      `);
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
-
-    it('finds no expansion op when marker can expand in three directions', () => {
-      const puzzle = parse(`
-      .2.
-      ...
-      `);
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
-
     it('finds symmetric incomplete expansion when perpendicular direction has insufficent space', () => {
       const puzzle = parse(`
       ..4..
@@ -287,24 +224,6 @@ describe('getAvailableOperations', () => {
           reasons: [EXPANSION_REASON],
         },
       ]);
-    });
-
-    it('finds no expansion when marker is complete', () => {
-      const puzzle = parse('<<<4');
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
-    });
-
-    it('finds no perpendicular expansion when marker is complete', () => {
-      const puzzle = parse(`
-      ...
-      <<3
-      ...
-      `);
-      const ops = getAvailableOperations(puzzle);
-
-      expect(ops).toEqual([]);
     });
 
     it('finds expansion when orientation is disambiguated by perpendicular mark', () => {
@@ -327,6 +246,89 @@ describe('getAvailableOperations', () => {
           reasons: [EXPANSION_REASON],
         },
       ]);
+    });
+  });
+
+  describe('no ops', () => {
+    it('finds no ops when dot is accessible by multiple markers', () => {
+      const puzzle = parse('..3.*.3..');
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    it('finds no dot pull op when corresponding marker is complete', () => {
+      const puzzle = parse('*<<4');
+
+      puzzle.dots[0].markedFrom = 'right';
+
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    it('finds no ops when unconstrained', () => {
+      const puzzle = parse('..3..');
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    it('finds no ops when marker can expand in either orientation', () => {
+      const puzzle = parse(`
+      2.
+      ..
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    it('finds no ops when marker can expand in any direction', () => {
+      const puzzle = parse(`
+      ...
+      .2.
+      ...
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    it('finds no ops when marker can expand in three directions', () => {
+      const puzzle = parse(`
+      .2.
+      ...
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    it('finds no expansion when marker is complete', () => {
+      const puzzle = parse('<<<4');
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    it('finds no perpendicular expansion when marker is complete', () => {
+      const puzzle = parse(`
+      ...
+      <<3
+      ...
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
+    });
+
+    // This would be helpful for having `solve` determine when a puzzle is invalid.
+    it.skip('finds no ops when there are invalid ambiguous dots', () => {
+      const puzzle = parse('*2*');
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toBeEmpty();
     });
   });
 
