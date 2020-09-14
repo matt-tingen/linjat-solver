@@ -47,9 +47,6 @@ const coalesceOperations = (operations: Operation[]) => {
   );
 };
 
-const isFullyMarked = (marker: MarkerCell) =>
-  sum(Object.values(getMarks(marker))) === marker.size - 1;
-
 const getAvailableOperations = (puzzle: Puzzle): Operation[] => {
   const operations: Operation[] = [];
 
@@ -80,55 +77,64 @@ const getAvailableOperations = (puzzle: Puzzle): Operation[] => {
   });
 
   // expansion ops
-  puzzle.markers
-    .filter((marker) => !isFullyMarked(marker))
-    .forEach((marker) => {
-      const couldBelongToMarker = (
-        cell: Cell,
-        markerDirection: Direction,
-      ): cell is MarkableCell =>
-        isMarkable(cell) &&
-        (!cell.markedFrom || cell.markedFrom === markerDirection);
+  puzzle.markers.forEach((marker) => {
+    const couldBelongToMarker = (
+      cell: Cell,
+      markerDirection: Direction,
+    ): cell is MarkableCell =>
+      isMarkable(cell) &&
+      (!cell.markedFrom || cell.markedFrom === markerDirection);
 
-      const spaceAvailable = mapDirections(
-        (dir) =>
-          runTo(
-            marker,
-            dir,
-            (cell) => couldBelongToMarker(cell, flip(dir)),
-            marker.size - 1,
-          ).length,
-      );
-      const minExtents = mapDirections(
-        (dir) => marker.size - spaceAvailable[flip(dir)] - 1,
-      );
+    const marks = getMarks(marker);
 
-      const directionalOps = mapDirections((dir) => {
-        const run = runTo(
-          marker,
-          dir,
-          (cell) => couldBelongToMarker(cell, flip(dir)),
-          minExtents[dir],
+    const markableRuns = mapDirections((dir) =>
+      runTo(
+        marker,
+        dir,
+        (cell) => couldBelongToMarker(cell, flip(dir)),
+        marker.size - 1,
+      ),
+    );
+
+    const verticalSpace = sum(
+      verticalDirections.map((dir) => markableRuns[dir].length),
+    );
+    const horizontalSpace = sum(
+      horizontalDirections.map((dir) => markableRuns[dir].length),
+    );
+
+    const verticalSize = 1 + sum(verticalDirections.map((dir) => marks[dir]));
+    const horizontalSize =
+      1 + sum(horizontalDirections.map((dir) => marks[dir]));
+
+    const canFitVertically =
+      horizontalSize === 1 && verticalSize + verticalSpace >= marker.size;
+    const canFitHorizontally =
+      verticalSize === 1 && horizontalSize + horizontalSpace >= marker.size;
+
+    if (canFitHorizontally !== canFitVertically) {
+      const applicableDirections = canFitHorizontally
+        ? horizontalDirections
+        : verticalDirections;
+
+      applicableDirections.forEach((dir: Direction) => {
+        const markableRun = markableRuns[dir];
+        const opposite = flip(dir);
+
+        const minExtent = Math.min(
+          markableRun.length,
+          marker.size - markableRuns[opposite].length - 1,
         );
 
-        const opposite = flip(dir);
-        const ops = run
+        const ops = markableRun
+          .slice(0, minExtent)
           .filter(canBeMarked)
           .map((cell) => buildOperation(cell, opposite, EXPANSION_REASON));
 
-        return ops;
+        operations.push(...ops);
       });
-
-      const hasPerpendicularOps =
-        horizontalDirections.some((hDir) => directionalOps[hDir].length) &&
-        verticalDirections.some((vDir) => directionalOps[vDir].length);
-
-      if (hasPerpendicularOps) return;
-
-      const expansionOperations = Object.values(directionalOps).flat();
-
-      operations.push(...expansionOperations);
-    });
+    }
+  });
 
   const coalesced = coalesceOperations(operations);
 

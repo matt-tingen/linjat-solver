@@ -247,6 +247,48 @@ describe('getAvailableOperations', () => {
       expect(ops).toEqual([]);
     });
 
+    it('finds no expansion op when marker can expand in any direction', () => {
+      const puzzle = parse(`
+      ...
+      .2.
+      ...
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toEqual([]);
+    });
+
+    it('finds no expansion op when marker can expand in three directions', () => {
+      const puzzle = parse(`
+      .2.
+      ...
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toEqual([]);
+    });
+
+    it('finds symmetric incomplete expansion when perpendicular direction has insufficent space', () => {
+      const puzzle = parse(`
+      ..4..
+      .....
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toEqual([
+        {
+          coordinates: { x: 1, y: 0 },
+          markFrom: 'right',
+          reasons: [EXPANSION_REASON],
+        },
+        {
+          coordinates: { x: 3, y: 0 },
+          markFrom: 'left',
+          reasons: [EXPANSION_REASON],
+        },
+      ]);
+    });
+
     it('finds no expansion when marker is complete', () => {
       const puzzle = parse('<<<4');
       const ops = getAvailableOperations(puzzle);
@@ -298,6 +340,38 @@ describe('getAvailableOperations', () => {
           coordinates: { x: 0, y: 0 },
           markFrom: 'right',
           reasons: expect.arrayContaining([DOT_PULL_REASON, EXPANSION_REASON]),
+        },
+      ]);
+    });
+  });
+
+  describe('complex', () => {
+    it('easy puzzle step 1', () => {
+      const puzzle = parse(`
+      .........
+      4..*.....
+      ...*.....
+      **.3...*3
+      22.......
+      **.5.**3*
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toIncludeSameMembers([
+        {
+          coordinates: { x: 3, y: 2 },
+          markFrom: 'down',
+          reasons: [DOT_PULL_REASON],
+        },
+        {
+          coordinates: { x: 2, y: 5 },
+          markFrom: 'right',
+          reasons: [EXPANSION_REASON],
+        },
+        {
+          coordinates: { x: 4, y: 5 },
+          markFrom: 'left',
+          reasons: [EXPANSION_REASON],
         },
       ]);
     });
