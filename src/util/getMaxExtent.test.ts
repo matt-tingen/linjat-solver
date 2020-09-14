@@ -57,4 +57,12 @@ describe('getMaxExtent', () => {
 
     expect(getMaxExtent(marker, 'left')).toBe(3);
   });
+
+  it('handles "..<5>.."', () => {
+    const { getCell } = parse('..<5>..');
+
+    const marker = getCell({ x: 3, y: 0 }) as MarkerCell;
+
+    expect(getMaxExtent(marker, 'left')).toBe(3);
+  });
 });

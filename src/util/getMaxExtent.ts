@@ -1,3 +1,4 @@
+import { clamp } from 'lodash';
 import { Direction, MarkerCell } from '../types';
 import getMarks from './getMarks';
 import { flip, getPerpendicularDirections, isMarkable, runTo } from '.';
@@ -17,10 +18,7 @@ const getMaxExtent = (marker: MarkerCell, direction: Direction): number => {
       isMarkable(cell) && (!cell.markedFrom || cell.markedFrom === opposite),
   );
   const availableSpace = run.length;
-  const maxExtent = Math.max(
-    Math.min(marker.size - 1, availableSpace) - marks[opposite],
-    0,
-  );
+  const maxExtent = clamp(marker.size - 1 - marks[opposite], 0, availableSpace);
 
   return maxExtent;
 };

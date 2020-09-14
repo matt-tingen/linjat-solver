@@ -347,8 +347,8 @@ describe('getAvailableOperations', () => {
     });
   });
 
-  describe('complex', () => {
-    it('easy puzzle step 1', () => {
+  describe('easy puzzle 1', () => {
+    it('solves step 1', () => {
       const puzzle = parse(`
       .........
       4..*.....
@@ -374,6 +374,26 @@ describe('getAvailableOperations', () => {
           coordinates: { x: 4, y: 5 },
           markFrom: 'left',
           reasons: [EXPANSION_REASON],
+        },
+      ]);
+    });
+
+    it('solves step 2', () => {
+      const puzzle = parse(`
+      .........
+      4..*.....
+      ...^.....
+      **.3...*3
+      22.......
+      **<5>**3*
+      `);
+      const ops = getAvailableOperations(puzzle);
+
+      expect(ops).toIncludeSameMembers([
+        {
+          coordinates: { x: 1, y: 3 },
+          markFrom: 'down',
+          reasons: [DOT_PULL_REASON],
         },
       ]);
     });
