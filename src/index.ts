@@ -7,7 +7,7 @@ import {
   DIFF_INSERT,
   diffStringsRaw,
 } from 'jest-diff';
-import { SPACE_CHAR } from './constants';
+import { DOT_CHAR, SPACE_CHAR } from './constants';
 import parse from './parse';
 import solve from './solve';
 import stringify from './stringify';
@@ -52,10 +52,14 @@ const stringifyPuzzleDiffs = (diffs: Diff[]) => {
         return chalk.dim('-');
       }
 
+      if (text === DOT_CHAR) {
+        return '•';
+      }
+
       return text;
     });
 
-  return parts.join('');
+  return parts.join(' ').replace(/^ /gm, '');
 };
 
 logPuzzleSection('Initial', stringifyPuzzleForOutput(initial));
